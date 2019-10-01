@@ -1,0 +1,6 @@
+---
+
+- name: Plex Configuration File
+  template:
+    src: plex.conf.j2
+    dest: "{{ instance_config_directory }}/plex.conf"
