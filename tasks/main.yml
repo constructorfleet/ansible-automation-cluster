@@ -1,2 +1,23 @@
 ---
 
+- name: Verify Instance Configuration Directory Exists
+  file:
+    state: directory
+    path: "{{ instance_config_directory }}"
+
+- name: Clone Instance Configuration
+  git:
+    repo: "{{ config_repo }}"
+    version: "{{ config_repo_version | default('master') }}"
+    dest: "{{ instance_config_directory }}"
+    depth: 1
+  when: config_repo is defined
+
+- name: Create Instance Secrets file
+  template:
+    src: secrets.yaml.j2
+    dest: "{{ instance_config_directory }}/secrets.yaml"
+
+- name: Run Media Instance Tasks
+  include_tasks: media.yml
+  when: "'media' in group_names"
