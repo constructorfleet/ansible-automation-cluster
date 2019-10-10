@@ -2,3 +2,9 @@
 
 automation_config_directory: "{{ data_mount_root }}/{{ configs_directory }}/automation"
 instance_config_directory: "{{ automation_config_directory }}/{{ instance_name }}"
+
+core_secrets:
+  - home_latitude
+  - home_longitude
+  - home_elevation
+  - home_timezone

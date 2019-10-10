@@ -1,3 +1,14 @@
 ---
 
-instance_name: '{{ inventory_hostname }}'
+data_mount_root: '/data'
+configs_directory: 'configs'
+
+secrets: {}
+
+instance_arguments: []
+docker_containers: {}
+
+home_latitude: 32.87336
+home_longitude: 117.22743
+home_elevation: 430
+home_timezone: America/Los_Angeles

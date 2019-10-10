@@ -1,23 +1,65 @@
 ---
-
-- name: Verify Instance Configuration Directory Exists
-  file:
-    state: directory
-    path: "{{ instance_config_directory }}"
-
 - name: Clone Instance Configuration
   git:
-    repo: "{{ config_repo }}"
+    repo: "{{ item.config_repo }}"
     version: "{{ config_repo_version | default('master') }}"
-    dest: "{{ instance_config_directory }}"
+    dest: "{{ automation_config_directory }}/{{ item.name }}"
     depth: 1
-  when: config_repo is defined
+    force: yes
+  with_items: "{{ instance_arguments }}"
+  when: item.name in group_names
 
 - name: Create Instance Secrets file
   template:
     src: secrets.yaml.j2
-    dest: "{{ instance_config_directory }}/secrets.yaml"
+    dest: "{{ automation_config_directory }}/{{ item.name }}/secrets.yaml"
+  with_items: "{{ instance_arguments }}"
+  when: item.name in group_names
+
+- name: Verify Instance Configuration Directory Exists
+  file:
+    state: directory
+    path: "{{ automation_config_directory }}/{{ item.name }}"
+    group: automation
+    owner: automation
+    recurse: yes
+    mode: u+rwx,g+rwx,o+rwx,g+s
+  with_items: "{{ instance_arguments }}"
+  when: item.name in group_names
 
 - name: Run Media Instance Tasks
   include_tasks: media.yml
   when: "'media' in group_names"
+
+- name: LDAP Authentication Configuration File
+  template:
+    src: ldap-auth.cfg.j2
+    dest: "{{ automation_config_directory }}/main/ldap-auth.cfg"
+  when: "'main' in group_names"
+
+- name: Create container_facts
+  set_fact:
+    container: 
+      name: "automation-{{ item.name }}"
+      instance_name: "{{ item.name }}"
+      description: "{{ item.description }}"
+      image: homeassistant/home-assistant:0.88.2
+      ports:
+        - "{{ item.port }}:8123"
+      devices: "{{ item.devices_to_mount | default([]) }}"
+      volumes:
+        - "{{ automation_config_directory }}/{{ item.name }}:/config"
+        - /etc/localtime:/etc/localtime:ro
+  with_items: "{{ instance_arguments }}"
+  register: container_facts
+
+- name: Create docker_containers
+  set_fact:
+    docker_containers: "{{ docker_containers|default({}) | combine( {item.ansible_facts.container.name: item.ansible_facts.container} ) }}"
+  loop: "{{ container_facts.results }}"
+  when: item.ansible_facts.container.instance_name in group_names
+
+- include_role:
+    name: docker
+    public: yes
+  when: docker_containers is defined
