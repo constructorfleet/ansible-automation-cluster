@@ -32,11 +32,11 @@
   set_fact:
     container: 
       name: "automation-{{ item.name }}"
+      networks: "{{ item.networks | default([]) }}"
       instance_name: "{{ item.name }}"
       description: "{{ item.description }}"
       image: homeassistant/home-assistant:0.88.2
-      ports:
-        - "{{ item.port }}:8123"
+      ports: "{{ item.ports | default([]) }}"
       devices: "{{ item.devices_to_mount | default([]) }}"
       volumes:
         - "{{ automation_config_directory }}/{{ item.name }}:/config"
