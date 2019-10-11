@@ -1,0 +1,13 @@
+---
+
+- name: Restart Automation Container
+  systemd:
+    name: "docker-automation-{{ item.name }}"
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: Remove Automation Container
+  docker_container:
+    name: "docker-automation-{{ item.name }}"
+    state: absent
