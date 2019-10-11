@@ -18,17 +18,6 @@
   with_items: "{{ instance_arguments }}"
   when: item.name in group_names
 
-- name: Verify Instance Configuration Directory Exists
-  file:
-    state: directory
-    path: "{{ automation_config_directory }}/{{ item.name }}"
-    group: automation
-    owner: automation
-    recurse: yes
-    mode: u+rwx,g+rwx,o+rwx,g+s
-  with_items: "{{ instance_arguments }}"
-  when: item.name in group_names
-
 - name: Run Media Instance Tasks
   include_tasks: media.yml
   when: "'media' in group_names"
