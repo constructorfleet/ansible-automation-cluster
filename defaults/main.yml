@@ -3,6 +3,8 @@
 data_mount_root: '/data'
 configs_directory: 'configs'
 
+homeassistant_version: 0.88.2
+
 secrets: {}
 
 instance_arguments: []

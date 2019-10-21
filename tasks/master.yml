@@ -1,0 +1,6 @@
+---
+
+- name: LDAP Authentication Configuration File
+  template:
+    src: ldap-auth.cfg.j2
+    dest: "{{ automation_config_directory }}/master/ldap-auth.cfg"

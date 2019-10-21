@@ -3,6 +3,10 @@
 automation_config_directory: "{{ data_mount_root }}/{{ configs_directory }}/automation"
 instance_config_directory: "{{ automation_config_directory }}/{{ instance_name }}"
 
+openldap_server_domain_name: "ldap.home.prettybaked.com"
+openldap_server_dc: "dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }},dc={{ openldap_server_domain_name.split('.')[2] }},dc={{ openldap_server_domain_name.split('.')[3] }}"
+users_ou: "ou=users,{{ openldap_server_dc }}"
+
 core_secrets:
   - home_latitude
   - home_longitude
