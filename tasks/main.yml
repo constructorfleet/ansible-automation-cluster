@@ -4,6 +4,7 @@
     repo: "{{ item.config_repo }}"
     version: "{{ config_repo_version | default('master') }}"
     dest: "{{ automation_config_directory }}/{{ item.name }}"
+    recursive: yes
     track_submodules: no
   with_items: "{{ instance_arguments }}"
   when: item.name in group_names
