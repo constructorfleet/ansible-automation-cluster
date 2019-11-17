@@ -9,7 +9,7 @@ secrets: {}
 
 instance_arguments: []
 docker_containers: {}
-docker_networks: []
+docker_networks: {}
 
 home_latitude: 32.87336
 home_longitude: 117.22743
