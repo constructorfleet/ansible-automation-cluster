@@ -49,7 +49,7 @@
       networks: "{{ item.networks | default([]) }}"
       instance_name: "{{ item.name }}"
       description: "{{ item.description }}"
-      image: "homeassistant/home-assistant:{{ homeassistant_version }}"
+      image: "homeassistant/home-assistant:{{ item.ha_version | default(homeassistant_version) }}"
       ports: "{{ item.ports | default([]) }}"
       devices: "{{ item.devices_to_mount | default([]) }}"
       depends_on: "{{ item.depends_on | default([]) }}"
