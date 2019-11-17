@@ -43,7 +43,7 @@
 
 - name: Create container_facts
   set_fact:
-    container: 
+    container:
       name: "automation-{{ item.name }}"
       network_mode: "{{ item.network_mode | default('bridge') }}"
       networks: "{{ item.networks | default([]) }}"
